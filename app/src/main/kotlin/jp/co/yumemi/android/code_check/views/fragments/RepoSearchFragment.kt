@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.databinding.FragmentRepoSearchBinding
+import jp.co.yumemi.android.code_check.models.GitHubAccount
 import jp.co.yumemi.android.code_check.viewmodels.OneViewModel
-import jp.co.yumemi.android.code_check.viewmodels.item
 
 class RepoSearchFragment : Fragment(R.layout.fragment_repo_search) {
 
@@ -34,7 +34,7 @@ class RepoSearchFragment : Fragment(R.layout.fragment_repo_search) {
         val _dividerItemDecoration =
             DividerItemDecoration(requireContext(), _layoutManager.orientation)
         val _adapter = CustomAdapter(object : CustomAdapter.OnItemClickListener {
-            override fun itemClick(item: item) {
+            override fun itemClick(item: GitHubAccount) {
                 gotoRepositoryFragment(item)
             }
         })
@@ -59,19 +59,19 @@ class RepoSearchFragment : Fragment(R.layout.fragment_repo_search) {
         }
     }
 
-    fun gotoRepositoryFragment(item: item) {
+    fun gotoRepositoryFragment(item: GitHubAccount) {
         val _action =
             RepoSearchFragmentDirections.actionRepoSearchFragmentToRepoDetailsFragment(item = item)
         findNavController().navigate(_action)
     }
 }
 
-val diff_util = object : DiffUtil.ItemCallback<item>() {
-    override fun areItemsTheSame(oldItem: item, newItem: item): Boolean {
+val diff_util = object : DiffUtil.ItemCallback<GitHubAccount>() {
+    override fun areItemsTheSame(oldItem: GitHubAccount, newItem: GitHubAccount): Boolean {
         return oldItem.name == newItem.name
     }
 
-    override fun areContentsTheSame(oldItem: item, newItem: item): Boolean {
+    override fun areContentsTheSame(oldItem: GitHubAccount, newItem: GitHubAccount): Boolean {
         return oldItem == newItem
     }
 
@@ -79,12 +79,12 @@ val diff_util = object : DiffUtil.ItemCallback<item>() {
 
 class CustomAdapter(
     private val itemClickListener: OnItemClickListener,
-) : ListAdapter<item, CustomAdapter.ViewHolder>(diff_util) {
+) : ListAdapter<GitHubAccount, CustomAdapter.ViewHolder>(diff_util) {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     interface OnItemClickListener {
-        fun itemClick(item: item)
+        fun itemClick(item: GitHubAccount)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

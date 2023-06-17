@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_repo_details">
         <argument
             android:name="item"
-            app:argType="jp.co.yumemi.android.code_check.viewmodels.item" />
+            app:argType="jp.co.yumemi.android.code_check.models.GitHubAccount" />
     </fragment>
 
 </navigation>
