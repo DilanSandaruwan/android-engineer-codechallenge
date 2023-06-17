@@ -1,7 +1,7 @@
 /*
  * Copyright © 2021 YUMEMI Inc. All rights reserved.
  */
-package jp.co.yumemi.android.code_check
+package jp.co.yumemi.android.code_check.views.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,15 +11,22 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.*
-import jp.co.yumemi.android.code_check.databinding.FragmentOneBinding
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import jp.co.yumemi.android.code_check.R
+import jp.co.yumemi.android.code_check.databinding.FragmentRepoSearchBinding
+import jp.co.yumemi.android.code_check.viewmodels.OneViewModel
+import jp.co.yumemi.android.code_check.viewmodels.item
 
-class OneFragment : Fragment(R.layout.fragment_one) {
+class RepoSearchFragment : Fragment(R.layout.fragment_repo_search) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val _binding = FragmentOneBinding.bind(view)
+        val _binding = FragmentRepoSearchBinding.bind(view)
 
         val _viewModel = OneViewModel(requireContext())
 
@@ -53,8 +60,8 @@ class OneFragment : Fragment(R.layout.fragment_one) {
     }
 
     fun gotoRepositoryFragment(item: item) {
-        val _action = OneFragmentDirections
-            .actionRepositoriesFragmentToRepositoryFragment(item = item)
+        val _action =
+            RepoSearchFragmentDirections.actionRepoSearchFragmentToRepoDetailsFragment(item = item)
         findNavController().navigate(_action)
     }
 }
