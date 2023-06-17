@@ -13,6 +13,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.TopActivity.Companion.lastSearchDate
+import jp.co.yumemi.android.code_check.constants.Constant
 import jp.co.yumemi.android.code_check.models.GitHubAccount
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -33,7 +34,7 @@ class OneViewModel(
         val client = HttpClient(Android)
 
         return@runBlocking GlobalScope.async {
-            val response: HttpResponse = client?.get("https://api.github.com/search/repositories") {
+            val response: HttpResponse = client?.get("${Constant.BASE_URL}${Constant.ENDPOINT_REPOSITORIES}") {
                 header("Accept", "application/vnd.github.v3+json")
                 parameter("q", inputText)
             }
