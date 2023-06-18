@@ -49,13 +49,7 @@ class RepoDetailsFragment : Fragment() {
         viewModel.setRepoDetails(args.repository)
 
         viewModel.gitHubRepoDetails.observe(viewLifecycleOwner) {
-            binding.ownerIconView.load(it.owner?.avatarUrl);
-            binding.nameView.text = it.name;
-            binding.languageView.text = it.language;
-            binding.starsView.text = "${it.stargazersCount} stars";
-            binding.watchersView.text = "${it.watchersCount} watchers";
-            binding.forksView.text = "${it.forksCount} forks";
-            binding.openIssuesView.text = "${it.openIssuesCount} open issues";
+            binding.ownerIconView.load(it.owner?.avatarUrl)
         }
     }
 }
