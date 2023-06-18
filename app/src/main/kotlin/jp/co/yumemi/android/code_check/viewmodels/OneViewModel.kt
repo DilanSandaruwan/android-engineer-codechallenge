@@ -33,9 +33,5 @@ class OneViewModel @Inject constructor(
         }
     }
 
-    fun clearRepositoriesList(){
-        _gitHubRepoList.value = emptyList()
-    }
-
 }
 

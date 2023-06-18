@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.models.GitHubAccount
-import jp.co.yumemi.android.code_check.views.fragments.diff_util
 
 class GitHubRepoRecyclerViewAdapter(
     private val itemClickListener: OnItemClickListener,
@@ -35,4 +35,21 @@ class GitHubRepoRecyclerViewAdapter(
             itemClickListener.itemClick(_item)
         }
     }
+
+    companion object {
+        val diff_util = object : DiffUtil.ItemCallback<GitHubAccount>() {
+            override fun areItemsTheSame(oldItem: GitHubAccount, newItem: GitHubAccount): Boolean {
+                return oldItem.name == newItem.name
+            }
+
+            override fun areContentsTheSame(
+                oldItem: GitHubAccount,
+                newItem: GitHubAccount
+            ): Boolean {
+                return oldItem == newItem
+            }
+
+        }
+    }
+
 }

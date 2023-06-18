@@ -11,7 +11,6 @@ import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +34,8 @@ class RepoSearchFragment : Fragment(R.layout.fragment_repo_search) {
         val _layoutManager = LinearLayoutManager(requireContext())
         val _dividerItemDecoration =
             DividerItemDecoration(requireContext(), _layoutManager.orientation)
-        val _adapter = GitHubRepoRecyclerViewAdapter(object : GitHubRepoRecyclerViewAdapter.OnItemClickListener {
+        val _adapter = GitHubRepoRecyclerViewAdapter(object :
+            GitHubRepoRecyclerViewAdapter.OnItemClickListener {
             override fun itemClick(item: GitHubAccount) {
                 gotoRepositoryFragment(item)
             }
@@ -45,7 +45,7 @@ class RepoSearchFragment : Fragment(R.layout.fragment_repo_search) {
             .setOnEditorActionListener { editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH) {
                     editText.text.toString().let {
-                        if (it.isBlank()){
+                        if (it.isBlank()) {
                             showNoTermSearchDialog(requireContext())
                         }
                         viewModel.searchRepositories(it)
@@ -62,7 +62,7 @@ class RepoSearchFragment : Fragment(R.layout.fragment_repo_search) {
             it.adapter = _adapter
         }
 
-        viewModel.gitHubRepoList.observe(viewLifecycleOwner){
+        viewModel.gitHubRepoList.observe(viewLifecycleOwner) {
             _adapter.submitList(it)
         }
     }
@@ -83,15 +83,6 @@ class RepoSearchFragment : Fragment(R.layout.fragment_repo_search) {
     }
 }
 
-val diff_util = object : DiffUtil.ItemCallback<GitHubAccount>() {
-    override fun areItemsTheSame(oldItem: GitHubAccount, newItem: GitHubAccount): Boolean {
-        return oldItem.name == newItem.name
-    }
 
-    override fun areContentsTheSame(oldItem: GitHubAccount, newItem: GitHubAccount): Boolean {
-        return oldItem == newItem
-    }
-
-}
 
 
