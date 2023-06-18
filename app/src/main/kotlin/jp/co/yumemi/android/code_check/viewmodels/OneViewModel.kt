@@ -25,11 +25,15 @@ class OneViewModel @Inject constructor(
     val gitHubRepoList: LiveData<List<GitHubAccount>>
         get() = _gitHubRepoList
 
-    // 検索結果
+    /**
+     * Fixme :
+     * Bug : "Double tap the search icon => Empty List appears"
+     */
+
     fun searchRepositories(inputText: String) {
         viewModelScope.launch {
             _gitHubRepoList.value =
-                gitHubAccountRepository.getGitHubAccountFromDataSource(inputText)?.items
+                gitHubAccountRepository.getGitHubAccountFromDataSource(inputText)?.items ?: emptyList()
         }
     }
 

@@ -4,37 +4,49 @@
 package jp.co.yumemi.android.code_check.views.fragments
 
 import android.os.Bundle
-import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import coil.load
 import dagger.hilt.android.AndroidEntryPoint
-import jp.co.yumemi.android.code_check.R
-import jp.co.yumemi.android.code_check.TopActivity.Companion.lastSearchDate
 import jp.co.yumemi.android.code_check.databinding.FragmentRepoDetailsBinding
+import jp.co.yumemi.android.code_check.viewmodels.RepoDetailsViewModel
 
 @AndroidEntryPoint
-class RepoDetailsFragment : Fragment(R.layout.fragment_repo_details) {
+class RepoDetailsFragment : Fragment() {
 
+    private lateinit var binding: FragmentRepoDetailsBinding
+    lateinit var viewModel: RepoDetailsViewModel
     private val args: RepoDetailsFragmentArgs by navArgs()
 
-    private var binding: FragmentRepoDetailsBinding? = null
-    private val _binding get() = binding!!
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentRepoDetailsBinding.inflate(layoutInflater, container, false)
+        viewModel = ViewModelProvider(requireActivity())[RepoDetailsViewModel::class.java]
+        binding.detailsVM = viewModel
+        binding.lifecycleOwner = this
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = FragmentRepoDetailsBinding.bind(view)
+        viewModel.setRepoDetails(args.item)
 
-        var item = args.item
-
-        _binding.ownerIconView.load(item.owner?.avatarUrl);
-        _binding.nameView.text = item.name;
-        _binding.languageView.text = item.language;
-        _binding.starsView.text = "${item.stargazersCount} stars";
-        _binding.watchersView.text = "${item.watchersCount} watchers";
-        _binding.forksView.text = "${item.forksCount} forks";
-        _binding.openIssuesView.text = "${item.openIssuesCount} open issues";
+        viewModel.gitHubRepoDetails.observe(viewLifecycleOwner){
+            binding.ownerIconView.load(it.owner?.avatarUrl);
+            binding.nameView.text = it.name;
+            binding.languageView.text = it.language;
+            binding.starsView.text = "${it.stargazersCount} stars";
+            binding.watchersView.text = "${it.watchersCount} watchers";
+            binding.forksView.text = "${it.forksCount} forks";
+            binding.openIssuesView.text = "${it.openIssuesCount} open issues";
+        }
     }
 }

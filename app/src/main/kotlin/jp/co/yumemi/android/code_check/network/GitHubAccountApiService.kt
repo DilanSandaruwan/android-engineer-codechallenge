@@ -11,5 +11,5 @@ interface GitHubAccountApiService {
 
     @Headers("Accept: application/vnd.github.v3+json")
     @GET(Constant.ENDPOINT_REPOSITORIES)
-    suspend fun getGitHubRepositories(@Query("q") q: String):Response<GitHubSearchResponse>
+    suspend fun getGitHubRepositories(@Query("q") query: String):Response<GitHubSearchResponse>
 }

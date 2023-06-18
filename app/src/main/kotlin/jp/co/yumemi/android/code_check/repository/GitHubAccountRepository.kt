@@ -8,14 +8,14 @@ import javax.inject.Inject
 
 class GitHubAccountRepository @Inject constructor(private val gitHubAccountApiService: GitHubAccountApiService) {
 
-    suspend fun getGitHubAccountFromDataSource(param: String): GitHubSearchResponse? {
+    suspend fun getGitHubAccountFromDataSource(query: String): GitHubSearchResponse? {
         return withContext(Dispatchers.IO) {
-            return@withContext getResponseFromRemoteService(param)
+            return@withContext getResponseFromRemoteService(query)
         }
     }
 
-    private suspend fun getResponseFromRemoteService(param: String): GitHubSearchResponse? {
-        val response = gitHubAccountApiService.getGitHubRepositories(param)
+    private suspend fun getResponseFromRemoteService(query: String): GitHubSearchResponse? {
+        val response = gitHubAccountApiService.getGitHubRepositories(query)
         if (response.isSuccessful) {
             return response.body()
         }
