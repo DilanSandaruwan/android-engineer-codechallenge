@@ -3,11 +3,12 @@
  */
 package jp.co.yumemi.android.code_check.views.fragments
 
+import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -44,7 +45,11 @@ class RepoSearchFragment : Fragment(R.layout.fragment_repo_search) {
             .setOnEditorActionListener { editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH) {
                     editText.text.toString().let {
-                        viewModel.searchResults(it)
+                        if (it.isBlank()){
+                            showNoTermSearchDialog(requireContext())
+                        }
+                        viewModel.searchRepositories(it)
+
                     }
                     return@setOnEditorActionListener true
                 }
@@ -66,6 +71,15 @@ class RepoSearchFragment : Fragment(R.layout.fragment_repo_search) {
         val _action =
             RepoSearchFragmentDirections.actionRepoSearchFragmentToRepoDetailsFragment(item = item)
         findNavController().navigate(_action)
+    }
+
+    private fun showNoTermSearchDialog(context: Context) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(getString(R.string.title_no_term_search))
+        builder.setIcon(android.R.drawable.ic_dialog_info)
+        builder.setMessage(getString(R.string.msg_no_term_search))
+        builder.setPositiveButton(getString(R.string.response_ok), null)
+        builder.show()
     }
 }
 

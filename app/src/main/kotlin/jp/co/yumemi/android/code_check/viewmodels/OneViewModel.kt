@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.co.yumemi.android.code_check.models.GitHubAccount
-import jp.co.yumemi.android.code_check.models.GitHubSearchResponse
 import jp.co.yumemi.android.code_check.repository.GitHubAccountRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,16 +21,20 @@ class OneViewModel @Inject constructor(
     private val gitHubAccountRepository: GitHubAccountRepository
 ) : ViewModel() {
 
-    private val _gitHubRepoList = MutableLiveData<List<GitHubAccount>>(null)
+    private val _gitHubRepoList = MutableLiveData<List<GitHubAccount>>()
     val gitHubRepoList: LiveData<List<GitHubAccount>>
         get() = _gitHubRepoList
 
     // 検索結果
-    fun searchResults(inputText: String) {
+    fun searchRepositories(inputText: String) {
         viewModelScope.launch {
             _gitHubRepoList.value =
                 gitHubAccountRepository.getGitHubAccountFromDataSource(inputText)?.items
         }
+    }
+
+    fun clearRepositoriesList(){
+        _gitHubRepoList.value = emptyList()
     }
 
 }
