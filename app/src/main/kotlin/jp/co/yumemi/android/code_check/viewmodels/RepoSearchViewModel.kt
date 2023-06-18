@@ -14,13 +14,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * RepoDetailsFragment で使う
+ * ViewModel class for managing repository search.
  */
 @HiltViewModel
 class RepoSearchViewModel @Inject constructor(
     private val gitHubAccountRepository: GitHubAccountRepository
 ) : ViewModel() {
 
+    /**
+     * LiveData representing the list of GitHub repositories.
+     */
     private val _gitHubRepoList = MutableLiveData<List<GitHubAccount>>()
     val gitHubRepoList: LiveData<List<GitHubAccount>>
         get() = _gitHubRepoList
@@ -28,12 +31,19 @@ class RepoSearchViewModel @Inject constructor(
     /**
      * Fixme :
      * Bug : "Double tap the search icon => Empty List appears"
+     * TODO: Investigate and fix the bug where double-tapping the search icon results in an empty list.
      */
 
+    /**
+     * Search repositories based on the provided input text.
+     *
+     * @param inputText The search input text.
+     */
     fun searchRepositories(inputText: String) {
         viewModelScope.launch {
             _gitHubRepoList.value =
-                gitHubAccountRepository.getGitHubAccountFromDataSource(inputText)?.items ?: emptyList()
+                gitHubAccountRepository.getGitHubAccountFromDataSource(inputText)?.items
+                    ?: emptyList()
         }
     }
 
