@@ -6,7 +6,9 @@ package jp.co.yumemi.android.code_check.views.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -21,27 +23,40 @@ import jp.co.yumemi.android.code_check.viewmodels.OneViewModel
 import jp.co.yumemi.android.code_check.views.adapters.GitHubRepoRecyclerViewAdapter
 
 @AndroidEntryPoint
-class RepoSearchFragment : Fragment(R.layout.fragment_repo_search) {
+class RepoSearchFragment : Fragment() {
 
-    lateinit var viewModel: OneViewModel
+    private lateinit var viewModel: OneViewModel
+    private lateinit var binding: FragmentRepoSearchBinding
+    private lateinit var adapter: GitHubRepoRecyclerViewAdapter
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding =
+            FragmentRepoSearchBinding.inflate(layoutInflater, container, false)
+        viewModel = ViewModelProvider(requireActivity())[OneViewModel::class.java]
+        binding.searchVM = viewModel
+        binding.lifecycleOwner = this
+
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val _binding = FragmentRepoSearchBinding.bind(view)
-
-        viewModel = ViewModelProvider(this)[OneViewModel::class.java]
 
         val _layoutManager = LinearLayoutManager(requireContext())
         val _dividerItemDecoration =
             DividerItemDecoration(requireContext(), _layoutManager.orientation)
-        val _adapter = GitHubRepoRecyclerViewAdapter(object :
+        adapter = GitHubRepoRecyclerViewAdapter(object :
             GitHubRepoRecyclerViewAdapter.OnItemClickListener {
             override fun itemClick(item: GitHubAccount) {
                 gotoRepositoryFragment(item)
             }
         })
 
-        _binding.searchInputText
+        binding.searchInputText
             .setOnEditorActionListener { editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH) {
                     editText.text.toString().let {
@@ -56,14 +71,14 @@ class RepoSearchFragment : Fragment(R.layout.fragment_repo_search) {
                 return@setOnEditorActionListener false
             }
 
-        _binding.recyclerView.also {
+        binding.recyclerView.also {
             it.layoutManager = _layoutManager
             it.addItemDecoration(_dividerItemDecoration)
-            it.adapter = _adapter
+            it.adapter = adapter
         }
 
         viewModel.gitHubRepoList.observe(viewLifecycleOwner) {
-            _adapter.submitList(it)
+            adapter.submitList(it)
         }
     }
 
