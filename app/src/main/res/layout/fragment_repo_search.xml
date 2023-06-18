@@ -6,7 +6,7 @@
     <data>
         <variable
             name="SearchVM"
-            type="jp.co.yumemi.android.code_check.viewmodels.OneViewModel" />
+            type="jp.co.yumemi.android.code_check.viewmodels.RepoSearchViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

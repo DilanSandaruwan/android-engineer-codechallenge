@@ -17,7 +17,7 @@ import javax.inject.Inject
  * RepoDetailsFragment で使う
  */
 @HiltViewModel
-class OneViewModel @Inject constructor(
+class RepoSearchViewModel @Inject constructor(
     private val gitHubAccountRepository: GitHubAccountRepository
 ) : ViewModel() {
 

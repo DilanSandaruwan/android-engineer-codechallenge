@@ -19,13 +19,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.databinding.FragmentRepoSearchBinding
 import jp.co.yumemi.android.code_check.models.GitHubAccount
-import jp.co.yumemi.android.code_check.viewmodels.OneViewModel
+import jp.co.yumemi.android.code_check.viewmodels.RepoSearchViewModel
 import jp.co.yumemi.android.code_check.views.adapters.GitHubRepoRecyclerViewAdapter
 
 @AndroidEntryPoint
 class RepoSearchFragment : Fragment() {
 
-    private lateinit var viewModel: OneViewModel
+    private lateinit var viewModel: RepoSearchViewModel
     private lateinit var binding: FragmentRepoSearchBinding
     private lateinit var adapter: GitHubRepoRecyclerViewAdapter
 
@@ -36,7 +36,7 @@ class RepoSearchFragment : Fragment() {
     ): View? {
         binding =
             FragmentRepoSearchBinding.inflate(layoutInflater, container, false)
-        viewModel = ViewModelProvider(requireActivity())[OneViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity())[RepoSearchViewModel::class.java]
         binding.searchVM = viewModel
         binding.lifecycleOwner = this
 
@@ -89,12 +89,13 @@ class RepoSearchFragment : Fragment() {
     }
 
     private fun showNoTermSearchDialog(context: Context) {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(getString(R.string.title_no_term_search))
-        builder.setIcon(android.R.drawable.ic_dialog_info)
-        builder.setMessage(getString(R.string.msg_no_term_search))
-        builder.setPositiveButton(getString(R.string.response_ok), null)
-        builder.show()
+        AlertDialog.Builder(context).apply {
+            setTitle(context.getString(R.string.title_no_term_search))
+            setIcon(android.R.drawable.ic_dialog_info)
+            setMessage(context.getString(R.string.msg_no_term_search))
+            setPositiveButton(context.getString(R.string.response_ok), null)
+            show()
+        }
     }
 }
 
