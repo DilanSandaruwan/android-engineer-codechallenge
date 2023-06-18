@@ -22,6 +22,9 @@ import jp.co.yumemi.android.code_check.models.GitHubAccount
 import jp.co.yumemi.android.code_check.viewmodels.RepoSearchViewModel
 import jp.co.yumemi.android.code_check.views.adapters.GitHubRepoRecyclerViewAdapter
 
+/**
+ * Fragment for searching GitHub repositories.
+ */
 @AndroidEntryPoint
 class RepoSearchFragment : Fragment() {
 
@@ -29,6 +32,9 @@ class RepoSearchFragment : Fragment() {
     private lateinit var binding: FragmentRepoSearchBinding
     private lateinit var adapter: GitHubRepoRecyclerViewAdapter
 
+    /**
+     * Inflates the layout and initializes the ViewModel.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,6 +49,9 @@ class RepoSearchFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Sets up the UI components and observes the changes in the GitHub repository list.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -51,6 +60,12 @@ class RepoSearchFragment : Fragment() {
             DividerItemDecoration(requireContext(), _layoutManager.orientation)
         adapter = GitHubRepoRecyclerViewAdapter(object :
             GitHubRepoRecyclerViewAdapter.OnItemClickListener {
+
+            /**
+             * Handles item click events.
+             *
+             * @param item The clicked GitHubAccount item.
+             */
             override fun itemClick(item: GitHubAccount) {
                 gotoRepositoryFragment(item)
             }
@@ -82,12 +97,22 @@ class RepoSearchFragment : Fragment() {
         }
     }
 
+    /**
+     * Navigates to the repository details fragment.
+     *
+     * @param item The selected GitHubAccount item.
+     */
     fun gotoRepositoryFragment(item: GitHubAccount) {
         val _action =
             RepoSearchFragmentDirections.actionRepoSearchFragmentToRepoDetailsFragment(repository = item)
         findNavController().navigate(_action)
     }
 
+    /**
+     * Displays a dialog for indicating no search term provided.
+     *
+     * @param context The context to show the dialog.
+     */
     private fun showNoTermSearchDialog(context: Context) {
         AlertDialog.Builder(context).apply {
             setTitle(context.getString(R.string.title_no_term_search))

@@ -15,6 +15,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import jp.co.yumemi.android.code_check.databinding.FragmentRepoDetailsBinding
 import jp.co.yumemi.android.code_check.viewmodels.RepoDetailsViewModel
 
+/**
+ * Fragment for displaying repository details.
+ */
 @AndroidEntryPoint
 class RepoDetailsFragment : Fragment() {
 
@@ -22,6 +25,9 @@ class RepoDetailsFragment : Fragment() {
     lateinit var viewModel: RepoDetailsViewModel
     private val args: RepoDetailsFragmentArgs by navArgs()
 
+    /**
+     * Inflates the layout and initializes the ViewModel.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,19 +40,16 @@ class RepoDetailsFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * Sets up the UI and observes the changes in the repository details.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.setRepoDetails(args.repository)
 
-        viewModel.gitHubRepoDetails.observe(viewLifecycleOwner){
-            binding.ownerIconView.load(it.owner?.avatarUrl);
-            binding.nameView.text = it.name;
-            binding.languageView.text = it.language;
-            binding.starsView.text = "${it.stargazersCount} stars";
-            binding.watchersView.text = "${it.watchersCount} watchers";
-            binding.forksView.text = "${it.forksCount} forks";
-            binding.openIssuesView.text = "${it.openIssuesCount} open issues";
+        viewModel.gitHubRepoDetails.observe(viewLifecycleOwner) {
+            binding.ownerIconView.load(it.owner?.avatarUrl)
         }
     }
 }

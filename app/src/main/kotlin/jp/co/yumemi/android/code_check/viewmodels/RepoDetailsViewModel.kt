@@ -5,12 +5,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import jp.co.yumemi.android.code_check.models.GitHubAccount
 
-class RepoDetailsViewModel:ViewModel() {
+/**
+ * ViewModel class for managing repository details.
+ */
+class RepoDetailsViewModel : ViewModel() {
     private var _gitHubRepoDetails = MutableLiveData<GitHubAccount>(null)
-    val gitHubRepoDetails : LiveData<GitHubAccount>
+
+    /**
+     * LiveData representing the GitHub account details.
+     */
+    val gitHubRepoDetails: LiveData<GitHubAccount>
         get() = _gitHubRepoDetails
 
-    fun setRepoDetails(gitHubAccount: GitHubAccount){
+    /**
+     * Sets the GitHub account details.
+     *
+     * @param gitHubAccount The GitHubAccount object representing the account details.
+     */
+    fun setRepoDetails(gitHubAccount: GitHubAccount) {
         _gitHubRepoDetails.value = gitHubAccount
     }
 }
