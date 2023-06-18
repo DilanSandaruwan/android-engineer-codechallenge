@@ -37,7 +37,7 @@ class RepoDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.setRepoDetails(args.item)
+        viewModel.setRepoDetails(args.repository)
 
         viewModel.gitHubRepoDetails.observe(viewLifecycleOwner){
             binding.ownerIconView.load(it.owner?.avatarUrl);

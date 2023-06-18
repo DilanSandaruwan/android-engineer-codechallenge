@@ -84,7 +84,7 @@ class RepoSearchFragment : Fragment() {
 
     fun gotoRepositoryFragment(item: GitHubAccount) {
         val _action =
-            RepoSearchFragmentDirections.actionRepoSearchFragmentToRepoDetailsFragment(item = item)
+            RepoSearchFragmentDirections.actionRepoSearchFragmentToRepoDetailsFragment(repository = item)
         findNavController().navigate(_action)
     }
 
