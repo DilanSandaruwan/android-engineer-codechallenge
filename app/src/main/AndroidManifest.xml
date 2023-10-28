@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidEngineerCodeCheck">
         <activity
-            android:name="jp.co.yumemi.android.code_check.TopActivity"
+            android:name="jp.co.yumemi.android.code_check.views.activities.TopActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

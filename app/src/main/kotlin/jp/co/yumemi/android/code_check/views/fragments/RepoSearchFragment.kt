@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,12 +28,16 @@ import jp.co.yumemi.android.code_check.views.adapters.GitHubRepoRecyclerViewAdap
 @AndroidEntryPoint
 class RepoSearchFragment : Fragment() {
 
-    private lateinit var viewModel: RepoSearchViewModel
     private lateinit var binding: FragmentRepoSearchBinding
     private lateinit var adapter: GitHubRepoRecyclerViewAdapter
 
     /**
-     * Inflates the layout and initializes the ViewModel.
+     * Initializes the ViewModel.
+     */
+    private val viewModel: RepoSearchViewModel by viewModels()
+
+    /**
+     * Inflates the layout.
      */
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,10 +45,10 @@ class RepoSearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding =
-            FragmentRepoSearchBinding.inflate(layoutInflater, container, false)
-        viewModel = ViewModelProvider(requireActivity())[RepoSearchViewModel::class.java]
-        binding.searchVM = viewModel
-        binding.lifecycleOwner = this
+            FragmentRepoSearchBinding.inflate(layoutInflater, container, false).apply {
+                searchVM = viewModel
+                lifecycleOwner = viewLifecycleOwner
+            }
 
         return binding.root
     }
