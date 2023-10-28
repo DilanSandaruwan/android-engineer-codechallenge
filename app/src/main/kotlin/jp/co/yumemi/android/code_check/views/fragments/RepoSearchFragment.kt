@@ -8,6 +8,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
@@ -98,6 +100,14 @@ class RepoSearchFragment : Fragment() {
 
         viewModel.gitHubRepoList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+        }
+
+        viewModel.showLoader.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.lytLoading.bubbleHolder.visibility = VISIBLE
+            } else {
+                binding.lytLoading.bubbleHolder.visibility = GONE
+            }
         }
     }
 

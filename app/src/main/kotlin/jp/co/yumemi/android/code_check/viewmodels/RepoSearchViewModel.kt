@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.co.yumemi.android.code_check.models.GitHubAccount
+import jp.co.yumemi.android.code_check.network.util.ApiResultState
 import jp.co.yumemi.android.code_check.repository.GitHubAccountRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,6 +22,10 @@ class RepoSearchViewModel @Inject constructor(
     private val gitHubAccountRepository: GitHubAccountRepository
 ) : ViewModel() {
 
+    private val _showLoader = MutableLiveData<Boolean>(false)
+    val showLoader: LiveData<Boolean>
+        get() = _showLoader
+
     /**
      * LiveData representing the list of GitHub repositories.
      */
@@ -29,21 +34,26 @@ class RepoSearchViewModel @Inject constructor(
         get() = _gitHubRepoList
 
     /**
-     * Fixme :
-     * Bug : "Double tap the search icon => Empty List appears"
-     * TODO: Investigate and fix the bug where double-tapping the search icon results in an empty list.
-     */
-
-    /**
      * Search repositories based on the provided input text.
      *
      * @param inputText The search input text.
      */
     fun searchRepositories(inputText: String) {
+
         viewModelScope.launch {
-            _gitHubRepoList.value =
-                gitHubAccountRepository.getGitHubAccountFromDataSource(inputText)?.items
-                    ?: emptyList()
+            _showLoader.postValue(true)
+            when (val response =
+                gitHubAccountRepository.getGitHubAccountFromDataSource(inputText)) {
+                is ApiResultState.Success -> {
+                    _showLoader.postValue(false)
+                    _gitHubRepoList.value = response.data?.items ?: emptyList()
+                }
+
+                is ApiResultState.Failed -> {
+                    _showLoader.postValue(false)
+                    _gitHubRepoList.value = emptyList()
+                }
+            }
         }
     }
 
