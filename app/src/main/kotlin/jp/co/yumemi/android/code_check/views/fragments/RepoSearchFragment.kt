@@ -3,8 +3,6 @@
  */
 package jp.co.yumemi.android.code_check.views.fragments
 
-import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.databinding.FragmentRepoSearchBinding
 import jp.co.yumemi.android.code_check.models.GitHubAccount
+import jp.co.yumemi.android.code_check.util.components.CustomDialogFragment
 import jp.co.yumemi.android.code_check.util.components.KeyBoardUtil
 import jp.co.yumemi.android.code_check.viewmodels.RepoSearchViewModel
 import jp.co.yumemi.android.code_check.views.adapters.GitHubRepoRecyclerViewAdapter
@@ -84,11 +83,10 @@ class RepoSearchFragment : Fragment() {
                     KeyBoardUtil.hideKeyboard(requireContext(), editText)
                     editText.text.toString().let {
                         if (it.isBlank()) {
-                            showNoTermSearchDialog(requireContext())
+                            showNoTermSearchDialog()
                         } else {
                             viewModel.searchRepositories(it)
                         }
-
                     }
                     return@setOnEditorActionListener true
                 }
@@ -130,14 +128,20 @@ class RepoSearchFragment : Fragment() {
      *
      * @param context The context to show the dialog.
      */
-    private fun showNoTermSearchDialog(context: Context) {
-        AlertDialog.Builder(context).apply {
-            setTitle(context.getString(R.string.title_no_term_search))
-            setIcon(android.R.drawable.ic_dialog_info)
-            setMessage(context.getString(R.string.msg_no_term_search))
-            setPositiveButton(context.getString(R.string.response_ok), null)
-            show()
-        }
+    private fun showNoTermSearchDialog() {
+        val dialog = CustomDialogFragment.newInstance(
+            getString(R.string.title_no_term_search),
+            getString(R.string.msg_no_term_search),
+            getString(R.string.response_ok),
+            "",
+            positiveClickListener = {
+                adapter.submitList(emptyList())
+            },
+            negativeClickListener = { },
+            R.drawable.ic_dialog_info
+        )
+        dialog.show(childFragmentManager, "custom_dialog_no_term_search")
+
     }
 }
 
