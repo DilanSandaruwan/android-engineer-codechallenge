@@ -1,8 +1,11 @@
 package jp.co.yumemi.android.code_check.repository
 
+import android.util.Log
+import jp.co.yumemi.android.code_check.constants.Constant.TAG
 import jp.co.yumemi.android.code_check.models.GitHubSearchResponse
 import jp.co.yumemi.android.code_check.network.GitHubAccountApiService
 import jp.co.yumemi.android.code_check.network.util.ApiResultState
+import jp.co.yumemi.android.code_check.network.util.retryIOOperation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,7 +25,9 @@ class GitHubAccountRepository @Inject constructor(private val gitHubAccountApiSe
      */
     suspend fun getGitHubAccountFromDataSource(query: String): ApiResultState<GitHubSearchResponse?> {
         return withContext(Dispatchers.IO) {
-            return@withContext getResponseFromRemoteService(query)
+            return@withContext retryIOOperation(3) {
+                getResponseFromRemoteService(query)
+            }
         }
     }
 
@@ -38,9 +43,14 @@ class GitHubAccountRepository @Inject constructor(private val gitHubAccountApiSe
             if (response.isSuccessful) {
                 ApiResultState.Success(response.body())
             } else {
+                Log.e(
+                    "$TAG - Response Check",
+                    "getResponseFromRemoteService: Failed ${response.code()}"
+                )
                 ApiResultState.Failed("Something went wrong!")
             }
         } catch (exception: Exception) {
+            Log.e("$TAG - Response Check", "getResponseFromRemoteService: ${exception.message}")
             ApiResultState.Failed("Something went wrong!")
         }
     }

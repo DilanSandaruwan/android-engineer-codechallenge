@@ -4,6 +4,7 @@
     <string name="written_language">Written in:</string>
     <string name="title_no_term_search">Nothing to Search?</string>
     <string name="msg_no_term_search">Please enter something to search.</string>
+    <string name="no_network_found">No internet connection found. Please check your internet connection.</string>
     <string name="response_ok" translatable="false">OK</string>
     <string name="label_stars" translatable="false">stars</string>
     <string name="label_watchers" translatable="false">watchers</string>

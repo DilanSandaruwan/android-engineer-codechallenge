@@ -3,4 +3,5 @@
     <string name="written_language">英語で書かれています: </string>
     <string name="title_no_term_search">検索条件がありませんか？</string>
     <string name="msg_no_term_search">検索する条件を入力してください。</string>
+    <string name="no_network_found">インターネット接続が見つかりません。 インターネット接続を確認してください。</string>
 </resources>
