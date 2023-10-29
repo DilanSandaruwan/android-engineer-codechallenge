@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.databinding.FragmentRepoSearchBinding
 import jp.co.yumemi.android.code_check.models.GitHubAccount
+import jp.co.yumemi.android.code_check.util.components.KeyBoardUtil
 import jp.co.yumemi.android.code_check.viewmodels.RepoSearchViewModel
 import jp.co.yumemi.android.code_check.views.adapters.GitHubRepoRecyclerViewAdapter
 
@@ -80,11 +81,13 @@ class RepoSearchFragment : Fragment() {
         binding.searchInputText
             .setOnEditorActionListener { editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH) {
+                    KeyBoardUtil.hideKeyboard(requireContext(), editText)
                     editText.text.toString().let {
                         if (it.isBlank()) {
                             showNoTermSearchDialog(requireContext())
+                        } else {
+                            viewModel.searchRepositories(it)
                         }
-                        viewModel.searchRepositories(it)
 
                     }
                     return@setOnEditorActionListener true
