@@ -110,6 +110,12 @@ class RepoSearchFragment : Fragment() {
                 binding.lytLoading.bubbleHolder.visibility = GONE
             }
         }
+
+        viewModel.showError.observe(viewLifecycleOwner) {
+            if (it != null) {
+                showErrorDialog(it)
+            }
+        }
     }
 
     /**
@@ -141,6 +147,20 @@ class RepoSearchFragment : Fragment() {
             R.drawable.ic_dialog_info
         )
         dialog.show(childFragmentManager, "custom_dialog_no_term_search")
+
+    }
+
+    private fun showErrorDialog(errMsg: String) {
+        val dialog = CustomDialogFragment.newInstance(
+            getString(R.string.error_title),
+            errMsg,
+            getString(R.string.response_ok),
+            "",
+            positiveClickListener = { },
+            negativeClickListener = { },
+            R.drawable.ic_dialog_error
+        )
+        dialog.show(childFragmentManager, "custom_dialog_error")
 
     }
 }

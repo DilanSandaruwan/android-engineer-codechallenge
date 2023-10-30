@@ -49,6 +49,7 @@ class CustomDialogFragment : DialogFragment() {
         iconResId?.let {
             builder.setIcon(it)
         }
+        isCancelable = false
         return builder.create()
     }
 }

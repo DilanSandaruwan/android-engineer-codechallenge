@@ -26,6 +26,10 @@ class RepoSearchViewModel @Inject constructor(
     val showLoader: LiveData<Boolean>
         get() = _showLoader
 
+    private val _showError = MutableLiveData<String>(null)
+    val showError: LiveData<String>
+        get() = _showError
+
     /**
      * LiveData representing the list of GitHub repositories.
      */
@@ -46,12 +50,13 @@ class RepoSearchViewModel @Inject constructor(
                 gitHubAccountRepository.getGitHubAccountFromDataSource(inputText)) {
                 is ApiResultState.Success -> {
                     _showLoader.postValue(false)
-                    _gitHubRepoList.value = response.data?.items ?: emptyList()
+                    _gitHubRepoList.postValue(response.data?.items ?: emptyList())
                 }
 
                 is ApiResultState.Failed -> {
                     _showLoader.postValue(false)
-                    _gitHubRepoList.value = emptyList()
+                    _showError.postValue(response.msg.toString())
+                    _gitHubRepoList.postValue(emptyList())
                 }
             }
         }

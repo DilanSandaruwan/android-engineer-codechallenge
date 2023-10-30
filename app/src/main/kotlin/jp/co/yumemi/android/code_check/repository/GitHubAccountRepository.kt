@@ -1,6 +1,7 @@
 package jp.co.yumemi.android.code_check.repository
 
 import android.util.Log
+import io.ktor.utils.io.errors.IOException
 import jp.co.yumemi.android.code_check.constants.Constant.TAG
 import jp.co.yumemi.android.code_check.models.GitHubSearchResponse
 import jp.co.yumemi.android.code_check.network.GitHubAccountApiService
@@ -8,6 +9,7 @@ import jp.co.yumemi.android.code_check.network.util.ApiResultState
 import jp.co.yumemi.android.code_check.network.util.retryIOOperation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.net.HttpURLConnection
 import javax.inject.Inject
 
 /**
@@ -43,15 +45,43 @@ class GitHubAccountRepository @Inject constructor(private val gitHubAccountApiSe
             if (response.isSuccessful) {
                 ApiResultState.Success(response.body())
             } else {
-                Log.e(
-                    "$TAG - Response Check",
-                    "getResponseFromRemoteService: Failed ${response.code()}"
-                )
-                ApiResultState.Failed("Something went wrong!")
+                when (response.code()) {
+                    HttpURLConnection.HTTP_NOT_FOUND -> {
+                        val errorMessage = "Resource not found"
+                        logError(errorMessage)
+                        ApiResultState.Failed(errorMessage)
+                    }
+
+                    HttpURLConnection.HTTP_UNAUTHORIZED -> {
+                        val errorMessage = "Unauthorized access"
+                        logError(errorMessage)
+                        ApiResultState.Failed(errorMessage)
+                    }
+
+                    else -> {
+                        val errorMessage = if (!response.raw().message().isNullOrEmpty()) {
+                            response.raw().message()
+                        } else {
+                            "Something went wrong!\n- Status Code: ${response.code()}"
+                        }
+                        logError(errorMessage)
+                        ApiResultState.Failed(errorMessage)
+                    }
+                }
             }
+        } catch (exception: IOException) {
+            val errorMessage = "Network error - ${exception.message}"
+            logError(errorMessage)
+            ApiResultState.Failed("Network error: ${exception.message}")
         } catch (exception: Exception) {
-            Log.e("$TAG - Response Check", "getResponseFromRemoteService: ${exception.message}")
-            ApiResultState.Failed("Something went wrong!")
+            val errorMessage = "Something went wrong!\n- ${exception.localizedMessage}"
+            logError(errorMessage)
+            ApiResultState.Failed(errorMessage)
         }
+    }
+
+    private fun logError(errorMessage: String) {
+        val logTag = "$TAG - Response Check"
+        Log.e(logTag, "getResponseFromRemoteService: $errorMessage")
     }
 }
