@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.co.yumemi.android.code_check.models.GitHubAccount
 import jp.co.yumemi.android.code_check.network.util.ApiResultState
 import jp.co.yumemi.android.code_check.repository.GitHubAccountRepository
+import jp.co.yumemi.android.code_check.util.exceptions.CustomErrorModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,12 +23,16 @@ class RepoSearchViewModel @Inject constructor(
     private val gitHubAccountRepository: GitHubAccountRepository
 ) : ViewModel() {
 
+    private val _isNoTermSearchDialogShown = MutableLiveData<Boolean>(false)
+    val isNoTermSearchDialogShown: LiveData<Boolean>
+        get() = _isNoTermSearchDialogShown
+
     private val _showLoader = MutableLiveData<Boolean>(false)
     val showLoader: LiveData<Boolean>
         get() = _showLoader
 
-    private val _showError = MutableLiveData<String>(null)
-    val showError: LiveData<String>
+    private val _showError = MutableLiveData<CustomErrorModel?>(null)
+    val showError: LiveData<CustomErrorModel?>
         get() = _showError
 
     /**
@@ -55,12 +60,15 @@ class RepoSearchViewModel @Inject constructor(
 
                 is ApiResultState.Failed -> {
                     _showLoader.postValue(false)
-                    _showError.postValue(response.msg.toString())
+                    _showError.postValue(CustomErrorModel(response.majorErrorResId,response.message))
                     _gitHubRepoList.postValue(emptyList())
                 }
             }
         }
     }
 
+    fun resetShowError(){
+        _showError.value = null
+    }
 }
 

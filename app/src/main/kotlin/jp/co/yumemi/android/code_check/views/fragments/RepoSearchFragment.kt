@@ -21,6 +21,7 @@ import jp.co.yumemi.android.code_check.databinding.FragmentRepoSearchBinding
 import jp.co.yumemi.android.code_check.models.GitHubAccount
 import jp.co.yumemi.android.code_check.util.components.CustomDialogFragment
 import jp.co.yumemi.android.code_check.util.components.KeyBoardUtil
+import jp.co.yumemi.android.code_check.util.exceptions.CustomErrorMessage
 import jp.co.yumemi.android.code_check.viewmodels.RepoSearchViewModel
 import jp.co.yumemi.android.code_check.views.adapters.GitHubRepoRecyclerViewAdapter
 
@@ -61,9 +62,9 @@ class RepoSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val _layoutManager = LinearLayoutManager(requireContext())
-        val _dividerItemDecoration =
-            DividerItemDecoration(requireContext(), _layoutManager.orientation)
+        val repoSearchLayoutManager = LinearLayoutManager(requireContext())
+        val repoSearchDividerItemDecoration =
+            DividerItemDecoration(requireContext(), repoSearchLayoutManager.orientation)
         adapter = GitHubRepoRecyclerViewAdapter(object :
             GitHubRepoRecyclerViewAdapter.OnItemClickListener {
 
@@ -94,8 +95,8 @@ class RepoSearchFragment : Fragment() {
             }
 
         binding.recyclerView.also {
-            it.layoutManager = _layoutManager
-            it.addItemDecoration(_dividerItemDecoration)
+            it.layoutManager = repoSearchLayoutManager
+            it.addItemDecoration(repoSearchDividerItemDecoration)
             it.adapter = adapter
         }
 
@@ -112,8 +113,8 @@ class RepoSearchFragment : Fragment() {
         }
 
         viewModel.showError.observe(viewLifecycleOwner) {
-            if (it != null) {
-                showErrorDialog(it)
+            it?.let {
+                showErrorDialog(CustomErrorMessage.createMessage(it, requireContext()))
             }
         }
     }
@@ -124,9 +125,9 @@ class RepoSearchFragment : Fragment() {
      * @param item The selected GitHubAccount item.
      */
     fun gotoRepositoryFragment(item: GitHubAccount) {
-        val _action =
+        val repoSearchNavDirections =
             RepoSearchFragmentDirections.actionRepoSearchFragmentToRepoDetailsFragment(repository = item)
-        findNavController().navigate(_action)
+        findNavController().navigate(repoSearchNavDirections)
     }
 
     /**
@@ -136,15 +137,15 @@ class RepoSearchFragment : Fragment() {
      */
     private fun showNoTermSearchDialog() {
         val dialog = CustomDialogFragment.newInstance(
-            getString(R.string.title_no_term_search),
-            getString(R.string.msg_no_term_search),
-            getString(R.string.response_ok),
-            "",
+            title = getString(R.string.title_no_term_search),
+            message = getString(R.string.msg_no_term_search),
+            positiveText = getString(R.string.response_ok),
+            negativeText = "",
             positiveClickListener = {
                 adapter.submitList(emptyList())
             },
             negativeClickListener = { },
-            R.drawable.ic_dialog_info
+            iconResId = R.drawable.ic_dialog_info
         )
         dialog.show(childFragmentManager, "custom_dialog_no_term_search")
 
@@ -152,13 +153,15 @@ class RepoSearchFragment : Fragment() {
 
     private fun showErrorDialog(errMsg: String) {
         val dialog = CustomDialogFragment.newInstance(
-            getString(R.string.error_title),
-            errMsg,
-            getString(R.string.response_ok),
-            "",
-            positiveClickListener = { },
+            title = getString(R.string.error_title),
+            message = errMsg,
+            positiveText = getString(R.string.response_ok),
+            negativeText = "",
+            positiveClickListener = {
+                viewModel.resetShowError()
+            },
             negativeClickListener = { },
-            R.drawable.ic_dialog_error
+            iconResId = R.drawable.ic_dialog_error
         )
         dialog.show(childFragmentManager, "custom_dialog_error")
 

@@ -16,10 +16,12 @@
     <string name="response_ok" translatable="false">OK</string>
 
     <!--  errors and exceptions  -->
+    <string name="network_error">Network error: </string>
     <string name="no_network_found">No internet connection found. Please check your internet connection.</string>
     <string name="network_unreachable">Network unreachable. Please check your internet connection.</string>
     <string name="resource_not_found">Resource not found.</string>
     <string name="unauthorized_access">Unauthorized access</string>
     <string name="something_wrong">Something went wrong!</string>
+    <string name="something_wrong_with_code">Something went wrong! \n- Status Code: </string>
 
 </resources>
