@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
+import coil.transform.CircleCropTransformation
 import dagger.hilt.android.AndroidEntryPoint
+import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.databinding.FragmentRepoDetailsBinding
 import jp.co.yumemi.android.code_check.viewmodels.RepoDetailsViewModel
 
@@ -53,7 +55,11 @@ class RepoDetailsFragment : Fragment() {
         viewModel.setRepoDetails(args.repository)
 
         viewModel.gitHubRepoDetails.observe(viewLifecycleOwner) {
-            binding.ownerIconView.load(it.owner?.avatarUrl)
+            binding.ownerIconView.load(it.owner?.avatarUrl) {
+                crossfade(true)
+                placeholder(R.drawable.placeholder_repository)
+                transformations(CircleCropTransformation())
+            }
         }
     }
 }
