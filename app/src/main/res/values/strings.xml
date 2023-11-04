@@ -23,5 +23,9 @@
     <string name="unauthorized_access">Unauthorized access</string>
     <string name="something_wrong">Something went wrong!</string>
     <string name="something_wrong_with_code">Something went wrong! \n- Status Code: </string>
+    <string name="placeholder_repository_name" translatable="false">Repository Name</string>
+    <string name="placeholder_repository_description" translatable="false">Repository Description</string>
+    <string name="placeholder_language" translatable="false">Java</string>
+    <string name="placeholder_stargazors" translatable="false">10K</string>
 
 </resources>

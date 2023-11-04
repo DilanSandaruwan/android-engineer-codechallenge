@@ -58,12 +58,18 @@ class GitHubRepoRecyclerViewAdapter(
      * @param position The position of the item in the list.
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val _item = getItem(position)
+        val holderItem = getItem(position)
         (holder.itemView.findViewById<View>(R.id.repositoryNameView) as TextView).text =
-            _item.name
+            holderItem.fullName
+        (holder.itemView.findViewById<View>(R.id.repositoryDescriptionTextView) as TextView).text =
+            holderItem.description
+        (holder.itemView.findViewById<View>(R.id.repositoryLanguageTextView) as TextView).text =
+            holderItem.language
+        (holder.itemView.findViewById<View>(R.id.repositoryStargazersTextView) as TextView).text =
+            holderItem.stargazersCount.toString()
 
         holder.itemView.setOnClickListener {
-            itemClickListener.itemClick(_item)
+            itemClickListener.itemClick(holderItem)
         }
     }
 
