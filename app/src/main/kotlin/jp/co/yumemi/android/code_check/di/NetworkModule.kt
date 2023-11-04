@@ -1,16 +1,20 @@
 package jp.co.yumemi.android.code_check.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jp.co.yumemi.android.code_check.constants.Constant.BASE_URL
 import jp.co.yumemi.android.code_check.network.GitHubAccountApiService
+import jp.co.yumemi.android.code_check.network.util.NetworkConnectivityInterceptor
 import jp.co.yumemi.android.code_check.repository.GitHubAccountRepository
 import okhttp3.OkHttpClient
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 /**
@@ -43,8 +47,11 @@ object NetworkModule {
      */
     @Singleton
     @Provides
-    fun provideHttpClient(): OkHttpClient {
+    fun provideHttpClient(@ApplicationContext context: Context): OkHttpClient {
         val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(NetworkConnectivityInterceptor(context))
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
         return okHttpClient.build()
     }
 

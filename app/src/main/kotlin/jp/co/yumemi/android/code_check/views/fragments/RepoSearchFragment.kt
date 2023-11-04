@@ -3,15 +3,15 @@
  */
 package jp.co.yumemi.android.code_check.views.fragments
 
-import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +19,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.databinding.FragmentRepoSearchBinding
 import jp.co.yumemi.android.code_check.models.GitHubAccount
+import jp.co.yumemi.android.code_check.util.components.CustomDialogFragment
+import jp.co.yumemi.android.code_check.util.components.KeyBoardUtil
+import jp.co.yumemi.android.code_check.util.exceptions.CustomErrorMessage
 import jp.co.yumemi.android.code_check.viewmodels.RepoSearchViewModel
 import jp.co.yumemi.android.code_check.views.adapters.GitHubRepoRecyclerViewAdapter
 
@@ -28,12 +31,16 @@ import jp.co.yumemi.android.code_check.views.adapters.GitHubRepoRecyclerViewAdap
 @AndroidEntryPoint
 class RepoSearchFragment : Fragment() {
 
-    private lateinit var viewModel: RepoSearchViewModel
     private lateinit var binding: FragmentRepoSearchBinding
     private lateinit var adapter: GitHubRepoRecyclerViewAdapter
 
     /**
-     * Inflates the layout and initializes the ViewModel.
+     * Initializes the ViewModel.
+     */
+    private val viewModel: RepoSearchViewModel by viewModels()
+
+    /**
+     * Inflates the layout.
      */
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,10 +48,10 @@ class RepoSearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding =
-            FragmentRepoSearchBinding.inflate(layoutInflater, container, false)
-        viewModel = ViewModelProvider(requireActivity())[RepoSearchViewModel::class.java]
-        binding.searchVM = viewModel
-        binding.lifecycleOwner = this
+            FragmentRepoSearchBinding.inflate(layoutInflater, container, false).apply {
+                searchVM = viewModel
+                lifecycleOwner = viewLifecycleOwner
+            }
 
         return binding.root
     }
@@ -55,9 +62,9 @@ class RepoSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val _layoutManager = LinearLayoutManager(requireContext())
-        val _dividerItemDecoration =
-            DividerItemDecoration(requireContext(), _layoutManager.orientation)
+        val repoSearchLayoutManager = LinearLayoutManager(requireContext())
+        val repoSearchDividerItemDecoration =
+            DividerItemDecoration(requireContext(), repoSearchLayoutManager.orientation)
         adapter = GitHubRepoRecyclerViewAdapter(object :
             GitHubRepoRecyclerViewAdapter.OnItemClickListener {
 
@@ -74,12 +81,13 @@ class RepoSearchFragment : Fragment() {
         binding.searchInputText
             .setOnEditorActionListener { editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH) {
+                    KeyBoardUtil.hideKeyboard(requireContext(), editText)
                     editText.text.toString().let {
                         if (it.isBlank()) {
-                            showNoTermSearchDialog(requireContext())
+                            showNoTermSearchDialog()
+                        } else {
+                            viewModel.searchRepositories(it)
                         }
-                        viewModel.searchRepositories(it)
-
                     }
                     return@setOnEditorActionListener true
                 }
@@ -87,13 +95,27 @@ class RepoSearchFragment : Fragment() {
             }
 
         binding.recyclerView.also {
-            it.layoutManager = _layoutManager
-            it.addItemDecoration(_dividerItemDecoration)
+            it.layoutManager = repoSearchLayoutManager
+            it.addItemDecoration(repoSearchDividerItemDecoration)
             it.adapter = adapter
         }
 
         viewModel.gitHubRepoList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+        }
+
+        viewModel.showLoader.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.lytLoading.bubbleHolder.visibility = VISIBLE
+            } else {
+                binding.lytLoading.bubbleHolder.visibility = GONE
+            }
+        }
+
+        viewModel.showError.observe(viewLifecycleOwner) {
+            it?.let {
+                showErrorDialog(CustomErrorMessage.createMessage(it, requireContext()))
+            }
         }
     }
 
@@ -103,9 +125,9 @@ class RepoSearchFragment : Fragment() {
      * @param item The selected GitHubAccount item.
      */
     fun gotoRepositoryFragment(item: GitHubAccount) {
-        val _action =
+        val repoSearchNavDirections =
             RepoSearchFragmentDirections.actionRepoSearchFragmentToRepoDetailsFragment(repository = item)
-        findNavController().navigate(_action)
+        findNavController().navigate(repoSearchNavDirections)
     }
 
     /**
@@ -113,14 +135,36 @@ class RepoSearchFragment : Fragment() {
      *
      * @param context The context to show the dialog.
      */
-    private fun showNoTermSearchDialog(context: Context) {
-        AlertDialog.Builder(context).apply {
-            setTitle(context.getString(R.string.title_no_term_search))
-            setIcon(android.R.drawable.ic_dialog_info)
-            setMessage(context.getString(R.string.msg_no_term_search))
-            setPositiveButton(context.getString(R.string.response_ok), null)
-            show()
-        }
+    private fun showNoTermSearchDialog() {
+        val dialog = CustomDialogFragment.newInstance(
+            title = getString(R.string.title_no_term_search),
+            message = getString(R.string.msg_no_term_search),
+            positiveText = getString(R.string.response_ok),
+            negativeText = "",
+            positiveClickListener = {
+                adapter.submitList(emptyList())
+            },
+            negativeClickListener = { },
+            iconResId = R.drawable.ic_dialog_info
+        )
+        dialog.show(childFragmentManager, "custom_dialog_no_term_search")
+
+    }
+
+    private fun showErrorDialog(errMsg: String) {
+        val dialog = CustomDialogFragment.newInstance(
+            title = getString(R.string.error_title),
+            message = errMsg,
+            positiveText = getString(R.string.response_ok),
+            negativeText = "",
+            positiveClickListener = {
+                viewModel.resetShowError()
+            },
+            negativeClickListener = { },
+            iconResId = R.drawable.ic_dialog_error
+        )
+        dialog.show(childFragmentManager, "custom_dialog_error")
+
     }
 }
 

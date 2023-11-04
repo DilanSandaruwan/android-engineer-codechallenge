@@ -3,4 +3,12 @@
     <string name="written_language">英語で書かれています: </string>
     <string name="title_no_term_search">検索条件がありませんか？</string>
     <string name="msg_no_term_search">検索する条件を入力してください。</string>
+    <string name="network_error">ネットワークエラー :</string>
+    <string name="no_network_found">インターネット接続が見つかりません。 インターネット接続を確認してください。</string>
+    <string name="resource_not_found">リソースが見つかりません</string>
+    <string name="error_title">エラー</string>
+    <string name="network_unreachable">ネットワークに到達できません。 インターネット接続を確認してください。</string>
+    <string name="unauthorized_access">不正アクセス</string>
+    <string name="something_wrong">何か問題が発生しました!</string>
+    <string name="something_wrong_with_code">何か問題が発生しました! \\n- ステータス コード:</string>
 </resources>

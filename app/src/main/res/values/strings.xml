@@ -1,12 +1,27 @@
 <resources>
     <string name="app_name" translatable="false">Android Engineer CodeCheck</string>
     <string name="searchInputText_hint" translatable="false">GitHub のリポジトリを検索できるよー</string>
+
+    <!--  details screen  -->
     <string name="written_language">Written in:</string>
-    <string name="title_no_term_search">Nothing to Search?</string>
-    <string name="msg_no_term_search">Please enter something to search.</string>
-    <string name="response_ok" translatable="false">OK</string>
     <string name="label_stars" translatable="false">stars</string>
     <string name="label_watchers" translatable="false">watchers</string>
     <string name="label_forks" translatable="false">forks</string>
     <string name="label_open_issues" translatable="false">open issues</string>
+
+    <!--  dialogs  -->
+    <string name="title_no_term_search">Nothing to Search?</string>
+    <string name="msg_no_term_search">Please enter something to search.</string>
+    <string name="error_title">Error</string>
+    <string name="response_ok" translatable="false">OK</string>
+
+    <!--  errors and exceptions  -->
+    <string name="network_error">Network error: </string>
+    <string name="no_network_found">No internet connection found. Please check your internet connection.</string>
+    <string name="network_unreachable">Network unreachable. Please check your internet connection.</string>
+    <string name="resource_not_found">Resource not found.</string>
+    <string name="unauthorized_access">Unauthorized access</string>
+    <string name="something_wrong">Something went wrong!</string>
+    <string name="something_wrong_with_code">Something went wrong! \n- Status Code: </string>
+
 </resources>

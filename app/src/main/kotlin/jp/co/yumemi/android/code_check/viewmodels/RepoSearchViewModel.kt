@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.co.yumemi.android.code_check.models.GitHubAccount
+import jp.co.yumemi.android.code_check.network.util.ApiResultState
 import jp.co.yumemi.android.code_check.repository.GitHubAccountRepository
+import jp.co.yumemi.android.code_check.util.exceptions.CustomErrorModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +23,18 @@ class RepoSearchViewModel @Inject constructor(
     private val gitHubAccountRepository: GitHubAccountRepository
 ) : ViewModel() {
 
+    private val _isNoTermSearchDialogShown = MutableLiveData<Boolean>(false)
+    val isNoTermSearchDialogShown: LiveData<Boolean>
+        get() = _isNoTermSearchDialogShown
+
+    private val _showLoader = MutableLiveData<Boolean>(false)
+    val showLoader: LiveData<Boolean>
+        get() = _showLoader
+
+    private val _showError = MutableLiveData<CustomErrorModel?>(null)
+    val showError: LiveData<CustomErrorModel?>
+        get() = _showError
+
     /**
      * LiveData representing the list of GitHub repositories.
      */
@@ -29,23 +43,32 @@ class RepoSearchViewModel @Inject constructor(
         get() = _gitHubRepoList
 
     /**
-     * Fixme :
-     * Bug : "Double tap the search icon => Empty List appears"
-     * TODO: Investigate and fix the bug where double-tapping the search icon results in an empty list.
-     */
-
-    /**
      * Search repositories based on the provided input text.
      *
      * @param inputText The search input text.
      */
     fun searchRepositories(inputText: String) {
+
         viewModelScope.launch {
-            _gitHubRepoList.value =
-                gitHubAccountRepository.getGitHubAccountFromDataSource(inputText)?.items
-                    ?: emptyList()
+            _showLoader.postValue(true)
+            when (val response =
+                gitHubAccountRepository.getGitHubAccountFromDataSource(inputText)) {
+                is ApiResultState.Success -> {
+                    _showLoader.postValue(false)
+                    _gitHubRepoList.postValue(response.data?.items ?: emptyList())
+                }
+
+                is ApiResultState.Failed -> {
+                    _showLoader.postValue(false)
+                    _showError.postValue(CustomErrorModel(response.majorErrorResId,response.message))
+                    _gitHubRepoList.postValue(emptyList())
+                }
+            }
         }
     }
 
+    fun resetShowError(){
+        _showError.value = null
+    }
 }
 
