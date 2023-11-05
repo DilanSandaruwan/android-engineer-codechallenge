@@ -67,7 +67,7 @@ class GitHubRepoRecyclerViewAdapter(
         (holder.itemView.findViewById<View>(R.id.repositoryDescriptionTextView) as TextView).text =
             holderItem.description
         (holder.itemView.findViewById<View>(R.id.repositoryLanguageTextView) as TextView).text =
-            holderItem.language
+            holderItem.language?:"N/A"
         (holder.itemView.findViewById<View>(R.id.repositoryStargazersTextView) as TextView).text =
             holderItem.stargazersCount.toString()
 

@@ -4,13 +4,11 @@
 package jp.co.yumemi.android.code_check.views.fragments
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -20,7 +18,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import jp.co.yumemi.android.code_check.R
 import jp.co.yumemi.android.code_check.databinding.FragmentRepoDetailsBinding
 import jp.co.yumemi.android.code_check.util.components.CustomDialogFragment
-import jp.co.yumemi.android.code_check.util.exceptions.CustomErrorMessage
 import jp.co.yumemi.android.code_check.viewmodels.RepoDetailsViewModel
 
 /**
@@ -75,7 +72,7 @@ class RepoDetailsFragment : Fragment() {
             // Add an OnClickListener to the floating action button
             binding.navFloatingActionButton.setOnClickListener {
                 val url = gitHubAccount.htmlUrl
-                if(gitHubAccount.htmlUrl.isNullOrBlank()){
+                if (gitHubAccount.htmlUrl.isNullOrBlank()) {
                     showErrorDialog(getString(R.string.url_not_found, requireContext()))
                 } else {
                     openUrlInBrowser(url!!)

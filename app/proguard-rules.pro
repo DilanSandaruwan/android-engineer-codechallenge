@@ -22,3 +22,8 @@
 
 -keep class jp.co.yumemi.android.code_check.models.** {*;}
 -keep class jp.co.yumemi.android.code_check.constants.** {*;}
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
+    public static *** e(...);
+}
