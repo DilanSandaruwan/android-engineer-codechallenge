@@ -149,7 +149,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_weight="1"
                         android:gravity="start|center_vertical"
-                        android:text="@{DetailsVM.gitHubRepoDetails.watchersCount.toString()}"
+                        android:text="@{DetailsVM.gitHubRepoDetails.watchers.toString()}"
                         android:textAlignment="viewStart"
                         android:textSize="16sp"
                         android:textStyle="bold"
