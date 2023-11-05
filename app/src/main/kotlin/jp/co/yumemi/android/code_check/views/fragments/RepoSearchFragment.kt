@@ -151,6 +151,11 @@ class RepoSearchFragment : Fragment() {
 
     }
 
+    /**
+     * Displays a custom error dialog with the provided error message.
+     *
+     * @param errMsg The error message to be displayed in the dialog.
+     */
     private fun showErrorDialog(errMsg: String) {
         val dialog = CustomDialogFragment.newInstance(
             title = getString(R.string.error_title),

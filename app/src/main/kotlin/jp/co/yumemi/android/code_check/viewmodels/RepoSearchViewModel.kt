@@ -39,35 +39,47 @@ class RepoSearchViewModel @Inject constructor(
         get() = _gitHubRepoList
 
     /**
-     * Search repositories based on the provided input text.
+     * Search for GitHub repositories based on the provided input text.
      *
      * @param inputText The search input text.
      */
     fun searchRepositories(inputText: String) {
 
         viewModelScope.launch {
+            // Show a loading indicator
             _showLoader.postValue(true)
             when (val response =
                 gitHubAccountRepository.getGitHubAccountFromDataSource(inputText)) {
                 is ApiResultState.Success -> {
+                    // Hide the loading indicator
                     _showLoader.postValue(false)
+
+                    // Update the LiveData with the retrieved repositories or an empty list if no data is available
                     _gitHubRepoList.postValue(response.data?.items ?: emptyList())
                 }
 
                 is ApiResultState.Failed -> {
+                    // Hide the loading indicator
                     _showLoader.postValue(false)
+
+                    // Display an error message to the user, if available
                     _showError.postValue(
                         CustomErrorModel(
                             response.majorErrorResId,
                             response.message
                         )
                     )
+
+                    // Clear the repository list
                     _gitHubRepoList.postValue(emptyList())
                 }
             }
         }
     }
 
+    /**
+     * Reset the error message to null, hiding any previously displayed errors.
+     */
     fun resetShowError() {
         _showError.value = null
     }

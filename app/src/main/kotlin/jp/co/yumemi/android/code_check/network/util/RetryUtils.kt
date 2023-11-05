@@ -5,6 +5,16 @@ import jp.co.yumemi.android.code_check.constants.Constant.TAG
 import kotlinx.coroutines.delay
 import java.io.IOException
 
+/**
+ * A utility function for retrying an I/O operation with a specified number of attempts and delays between retries.
+ *
+ * @param times The maximum number of retry attempts.
+ * @param initialDelayMillis The initial delay in milliseconds before the first retry attempt.
+ * @param maxDelayMillis The maximum delay in milliseconds between retries.
+ * @param block A suspend function representing the I/O operation to be retried.
+ * @return The result of the I/O operation if successful after retries.
+ * @throws IOException if the I/O operation fails after all retry attempts.
+ */
 suspend fun <T> retryIOOperation(
     times: Int,
     initialDelayMillis: Long = 1000,

@@ -38,7 +38,7 @@ class RepoDetailsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentRepoDetailsBinding.inflate(layoutInflater, container, false).apply {
             detailsVM = viewModel
             lifecycleOwner = viewLifecycleOwner
@@ -47,13 +47,18 @@ class RepoDetailsFragment : Fragment() {
     }
 
     /**
-     * Sets up the UI and observes the changes in the repository details.
+     * Sets up the user interface and observes changes in the repository details.
+     *
+     * @param view The root view for the fragment.
+     * @param savedInstanceState The saved instance state, if any.
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Set the repository details in the ViewModel based on arguments passed to the fragment
         viewModel.setRepoDetails(args.repository)
 
+        // Observe changes in the repository details and update the UI
         viewModel.gitHubRepoDetails.observe(viewLifecycleOwner) {
             binding.ownerIconView.load(it.owner?.avatarUrl) {
                 crossfade(true)

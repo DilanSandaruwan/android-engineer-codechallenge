@@ -52,13 +52,16 @@ class GitHubRepoRecyclerViewAdapter(
     }
 
     /**
-     * Binds the data to the views of the ViewHolder.
+     * Binds the data to the views of the ViewHolder at the specified position in the list.
      *
      * @param holder The ViewHolder to bind the data to.
      * @param position The position of the item in the list.
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        // Get the data for the current item at the given position
         val holderItem = getItem(position)
+
+        // Bind the data to the corresponding views in the ViewHolder
         (holder.itemView.findViewById<View>(R.id.repositoryNameView) as TextView).text =
             holderItem.fullName
         (holder.itemView.findViewById<View>(R.id.repositoryDescriptionTextView) as TextView).text =
@@ -68,6 +71,7 @@ class GitHubRepoRecyclerViewAdapter(
         (holder.itemView.findViewById<View>(R.id.repositoryStargazersTextView) as TextView).text =
             holderItem.stargazersCount.toString()
 
+        // Set an onClickListener to handle item clicks and trigger an action
         holder.itemView.setOnClickListener {
             itemClickListener.itemClick(holderItem)
         }

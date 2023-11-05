@@ -38,7 +38,7 @@ class GitHubAccountRepository @Inject constructor(private val gitHubAccountApiSe
      * Retrieves the response from the remote GitHub Account API service.
      *
      * @param query The search query.
-     * @return The GitHubSearchResponse object containing the response body, or null if the response is unsuccessful.
+     * @return An [ApiResultState] representing the response from the API service, which can be a success or a failure.
      */
     private suspend fun getResponseFromRemoteService(query: String): ApiResultState<GitHubSearchResponse?> {
         return try {
@@ -84,6 +84,11 @@ class GitHubAccountRepository @Inject constructor(private val gitHubAccountApiSe
         }
     }
 
+    /**
+     * Logs an error message with a specific tag.
+     *
+     * @param errorMessage The error message to be logged.
+     */
     private fun logError(errorMessage: String) {
         val logTag = "$TAG - Response Check"
         Log.e(logTag, "getResponseFromRemoteService: $errorMessage")

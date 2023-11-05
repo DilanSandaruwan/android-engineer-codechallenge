@@ -5,9 +5,11 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 /**
- * Data class representing the owner of a GitHub account.
+ * Data class representing the owner of a GitHub account or repository.
+ * Implements Parcelable for efficient data transfer between components.
  *
- * @param avatarUrl The URL of the owner's avatar image.
+ * @property avatarUrl The URL of the owner's avatar image.
+ * @property login The username or login name of the owner.
  */
 @Parcelize
 data class Owner(

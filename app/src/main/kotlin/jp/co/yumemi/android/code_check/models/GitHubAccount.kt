@@ -5,15 +5,20 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 /**
- * Data class representing a GitHub account.
+ * Data class representing a GitHub account or repository.
+ * Implements Parcelable for efficient data transfer between components.
  *
- * @param name The name of the account.
- * @param owner The owner of the account.
- * @param language The programming language used in the account.
- * @param stargazersCount The number of stargazers for the account.
- * @param watchersCount The number of watchers for the account.
- * @param forksCount The number of forks for the account.
- * @param openIssuesCount The number of open issues for the account.
+ * @property name The name of the GitHub account or repository.
+ * @property fullName The full name of the GitHub account or repository.
+ * @property owner The owner of the GitHub account or repository.
+ * @property htmlUrl The HTML URL of the GitHub account or repository.
+ * @property description A brief description of the GitHub account or repository.
+ * @property language The programming language used in the GitHub account or repository.
+ * @property stargazersCount The number of stargazers (users who have marked the account or repository as a favorite).
+ * @property watchersCount The number of users who are watching this account or repository.
+ * @property forksCount The number of forks (duplicated repositories) of this account or repository.
+ * @property openIssuesCount The number of open issues for this account or repository.
+ * @property watchers The number of users watching this account or repository.
  */
 @Parcelize
 data class GitHubAccount(

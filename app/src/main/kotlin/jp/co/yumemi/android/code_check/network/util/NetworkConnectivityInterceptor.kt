@@ -13,8 +13,24 @@ import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
 
-
+/**
+ * An interceptor for handling network connectivity checks in Retrofit.
+ *
+ * This interceptor checks for the availability of network connectivity and internet reachability
+ * before making an API request. It throws a [NetworkUnavailableException] with an appropriate error
+ * message if network conditions are not met.
+ *
+ * @param context The application context for accessing system services.
+ */
 class NetworkConnectivityInterceptor(private val context: Context) : Interceptor {
+
+    /**
+     * Intercepts the request chain and checks for network availability and internet reachability.
+     *
+     * @param chain The intercepted request chain.
+     * @return The response from the chain if network conditions are met.
+     * @throws NetworkUnavailableException if network conditions are not met.
+     */
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!isNetworkAvailable()) {
             throw NetworkUnavailableException(context.getString(R.string.no_network_found))
@@ -26,6 +42,11 @@ class NetworkConnectivityInterceptor(private val context: Context) : Interceptor
         return chain.proceed(chain.request())
     }
 
+    /**
+     * Checks if network connectivity is available.
+     *
+     * @return `true` if network connectivity is available, `false` otherwise.
+     */
     private fun isNetworkAvailable(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -46,6 +67,11 @@ class NetworkConnectivityInterceptor(private val context: Context) : Interceptor
         }
     }
 
+    /**
+     * Checks if internet is reachable by attempting to make a simple connection to a test URL.
+     *
+     * @return `true` if internet is reachable, `false` otherwise.
+     */
     private fun isInternetReachable(): Boolean {
         return try {
             val urlConnection = URL(TEST_URL).openConnection() as HttpURLConnection
