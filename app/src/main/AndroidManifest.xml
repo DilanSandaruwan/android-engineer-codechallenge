@@ -15,7 +15,8 @@
         android:theme="@style/Theme.AndroidEngineerCodeCheck">
         <activity
             android:name="jp.co.yumemi.android.code_check.views.activities.TopActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.GitHubRepoApp.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

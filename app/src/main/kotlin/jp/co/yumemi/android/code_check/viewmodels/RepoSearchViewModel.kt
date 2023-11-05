@@ -23,15 +23,11 @@ class RepoSearchViewModel @Inject constructor(
     private val gitHubAccountRepository: GitHubAccountRepository
 ) : ViewModel() {
 
-    private val _isNoTermSearchDialogShown = MutableLiveData<Boolean>(false)
-    val isNoTermSearchDialogShown: LiveData<Boolean>
-        get() = _isNoTermSearchDialogShown
-
-    private val _showLoader = MutableLiveData<Boolean>(false)
+    private val _showLoader = MutableLiveData<Boolean>()
     val showLoader: LiveData<Boolean>
         get() = _showLoader
 
-    private val _showError = MutableLiveData<CustomErrorModel?>(null)
+    private val _showError = MutableLiveData<CustomErrorModel?>()
     val showError: LiveData<CustomErrorModel?>
         get() = _showError
 
@@ -43,31 +39,48 @@ class RepoSearchViewModel @Inject constructor(
         get() = _gitHubRepoList
 
     /**
-     * Search repositories based on the provided input text.
+     * Search for GitHub repositories based on the provided input text.
      *
      * @param inputText The search input text.
      */
     fun searchRepositories(inputText: String) {
 
         viewModelScope.launch {
+            // Show a loading indicator
             _showLoader.postValue(true)
             when (val response =
                 gitHubAccountRepository.getGitHubAccountFromDataSource(inputText)) {
                 is ApiResultState.Success -> {
+                    // Hide the loading indicator
                     _showLoader.postValue(false)
+
+                    // Update the LiveData with the retrieved repositories or an empty list if no data is available
                     _gitHubRepoList.postValue(response.data?.items ?: emptyList())
                 }
 
                 is ApiResultState.Failed -> {
+                    // Hide the loading indicator
                     _showLoader.postValue(false)
-                    _showError.postValue(CustomErrorModel(response.majorErrorResId,response.message))
+
+                    // Display an error message to the user, if available
+                    _showError.postValue(
+                        CustomErrorModel(
+                            response.majorErrorResId,
+                            response.message
+                        )
+                    )
+
+                    // Clear the repository list
                     _gitHubRepoList.postValue(emptyList())
                 }
             }
         }
     }
 
-    fun resetShowError(){
+    /**
+     * Reset the error message to null, hiding any previously displayed errors.
+     */
+    fun resetShowError() {
         _showError.value = null
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="written_language">英語で書かれています: </string>
+    <string name="navigate_to_github">GitHub に移動</string>
     <string name="title_no_term_search">検索条件がありませんか？</string>
     <string name="msg_no_term_search">検索する条件を入力してください。</string>
     <string name="network_error">ネットワークエラー :</string>
@@ -11,4 +11,5 @@
     <string name="unauthorized_access">不正アクセス</string>
     <string name="something_wrong">何か問題が発生しました!</string>
     <string name="something_wrong_with_code">何か問題が発生しました! \\n- ステータス コード:</string>
+    <string name="select_a_browser">ブラウザを選択してください</string>
 </resources>

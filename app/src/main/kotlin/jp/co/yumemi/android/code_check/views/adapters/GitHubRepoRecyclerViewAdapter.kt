@@ -52,18 +52,28 @@ class GitHubRepoRecyclerViewAdapter(
     }
 
     /**
-     * Binds the data to the views of the ViewHolder.
+     * Binds the data to the views of the ViewHolder at the specified position in the list.
      *
      * @param holder The ViewHolder to bind the data to.
      * @param position The position of the item in the list.
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val _item = getItem(position)
-        (holder.itemView.findViewById<View>(R.id.repositoryNameView) as TextView).text =
-            _item.name
+        // Get the data for the current item at the given position
+        val holderItem = getItem(position)
 
+        // Bind the data to the corresponding views in the ViewHolder
+        (holder.itemView.findViewById<View>(R.id.repositoryNameView) as TextView).text =
+            holderItem.fullName
+        (holder.itemView.findViewById<View>(R.id.repositoryDescriptionTextView) as TextView).text =
+            holderItem.description
+        (holder.itemView.findViewById<View>(R.id.repositoryLanguageTextView) as TextView).text =
+            holderItem.language?:"N/A"
+        (holder.itemView.findViewById<View>(R.id.repositoryStargazersTextView) as TextView).text =
+            holderItem.stargazersCount.toString()
+
+        // Set an onClickListener to handle item clicks and trigger an action
         holder.itemView.setOnClickListener {
-            itemClickListener.itemClick(_item)
+            itemClickListener.itemClick(holderItem)
         }
     }
 

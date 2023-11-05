@@ -5,6 +5,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 
+/**
+ * A custom dialog fragment for displaying a simple dialog with customizable content and actions.
+ */
 class CustomDialogFragment : DialogFragment() {
     private var title: String = "Dialog Title"
     private var message: String = "Dialog Message"
@@ -14,7 +17,22 @@ class CustomDialogFragment : DialogFragment() {
     private var negativeClickListener: (() -> Unit)? = null
     private var iconResId: Int? = null
 
+    /**
+     * A companion object providing a convenient way to create instances of CustomDialogFragment with customizable parameters.
+     */
     companion object {
+        /**
+         * Create a new instance of CustomDialogFragment with customizable parameters.
+         *
+         * @param title The title of the dialog.
+         * @param message The message content of the dialog.
+         * @param positiveText The text for the positive button (e.g., OK).
+         * @param negativeText The text for the negative button (e.g., Cancel).
+         * @param positiveClickListener A lambda function to be executed when the positive button is clicked.
+         * @param negativeClickListener A lambda function to be executed when the negative button is clicked.
+         * @param iconResId An optional resource ID for an icon to be displayed in the dialog.
+         * @return An instance of CustomDialogFragment with the specified parameters.
+         */
         fun newInstance(
             title: String,
             message: String,
@@ -36,6 +54,12 @@ class CustomDialogFragment : DialogFragment() {
         }
     }
 
+    /**
+     * Creates and configures the dialog when the fragment is being created.
+     *
+     * @param savedInstanceState The saved instance state, if any.
+     * @return A dialog displaying the specified title, message, buttons, and icon.
+     */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(title)
