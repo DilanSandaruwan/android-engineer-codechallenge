@@ -23,15 +23,11 @@ class RepoSearchViewModel @Inject constructor(
     private val gitHubAccountRepository: GitHubAccountRepository
 ) : ViewModel() {
 
-    private val _isNoTermSearchDialogShown = MutableLiveData<Boolean>(false)
-    val isNoTermSearchDialogShown: LiveData<Boolean>
-        get() = _isNoTermSearchDialogShown
-
-    private val _showLoader = MutableLiveData<Boolean>(false)
+    private val _showLoader = MutableLiveData<Boolean>()
     val showLoader: LiveData<Boolean>
         get() = _showLoader
 
-    private val _showError = MutableLiveData<CustomErrorModel?>(null)
+    private val _showError = MutableLiveData<CustomErrorModel?>()
     val showError: LiveData<CustomErrorModel?>
         get() = _showError
 
@@ -60,14 +56,19 @@ class RepoSearchViewModel @Inject constructor(
 
                 is ApiResultState.Failed -> {
                     _showLoader.postValue(false)
-                    _showError.postValue(CustomErrorModel(response.majorErrorResId,response.message))
+                    _showError.postValue(
+                        CustomErrorModel(
+                            response.majorErrorResId,
+                            response.message
+                        )
+                    )
                     _gitHubRepoList.postValue(emptyList())
                 }
             }
         }
     }
 
-    fun resetShowError(){
+    fun resetShowError() {
         _showError.value = null
     }
 }

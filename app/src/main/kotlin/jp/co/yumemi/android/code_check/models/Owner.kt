@@ -11,5 +11,6 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class Owner(
-    @SerializedName("avatar_url") val avatarUrl: String?
+    @SerializedName("avatar_url") val avatarUrl: String?,
+    @SerializedName("login") val login: String?,
 ) : Parcelable
