@@ -9,225 +9,248 @@
             type="jp.co.yumemi.android.code_check.viewmodels.RepoDetailsViewModel" />
     </data>
 
-    <LinearLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/ownerIconView"
-            android:layout_width="240dp"
-            android:layout_height="240dp"
-            android:layout_gravity="center"
-            android:layout_margin="16dp"
-            android:contentDescription="@string/placeholder_repository_owner"
-            android:maxWidth="240dp"
-            android:src="@drawable/jetbrains" />
-
-        <TextView
-            android:id="@+id/nameView"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="@{DetailsVM.gitHubRepoDetails.name}"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            tools:text="JetBrains/Kotlin" />
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
 
-        <TextView
-            android:id="@+id/languageView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:text="@{DetailsVM.gitHubRepoDetails.description}"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            tools:text="@string/placeholder_repository_description" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-        <TextView
-            android:id="@+id/txtLanguage"
+                <ImageView
+                    android:id="@+id/ownerIconView"
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="16dp"
+                    android:contentDescription="@string/placeholder_repository_owner"
+                    android:maxWidth="240dp"
+                    android:src="@drawable/jetbrains" />
+
+                <TextView
+                    android:id="@+id/nameView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:text="@{DetailsVM.gitHubRepoDetails.name}"
+                    android:textColor="?attr/colorSecondary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:text="JetBrains/Kotlin" />
+
+                <TextView
+                    android:id="@+id/languageView"
+                    style="@style/ValueTextTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center"
+                    android:text="@{DetailsVM.gitHubRepoDetails.description}"
+                    android:textSize="14sp"
+                    tools:text="@string/placeholder_repository_description" />
+
+                <TextView
+                    android:id="@+id/txtLanguage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:text="@{DetailsVM.gitHubRepoDetails.language}"
+                    android:textColor="?attr/colorSecondary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="@string/placeholder_language" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lblStars"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/label_stars"
+                        android:textAlignment="viewEnd"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_stargazor_48dp" />
+
+                    <TextView
+                        android:id="@+id/starsView"
+                        style="@style/ValueTextTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:text="@{DetailsVM.gitHubRepoDetails.stargazersCount.toString()}"
+                        android:textAlignment="viewStart"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="38530 stars" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lblWatchers"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/label_watchers"
+                        android:textAlignment="viewEnd"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_watcher_48dp" />
+
+                    <TextView
+                        android:id="@+id/watchersView"
+                        style="@style/ValueTextTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:text="@{DetailsVM.gitHubRepoDetails.watchersCount.toString()}"
+                        android:textAlignment="viewStart"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="38530 watchers" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lblForks"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/label_forks"
+                        android:textAlignment="viewEnd"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_fork_right_48dp" />
+
+                    <TextView
+                        android:id="@+id/forksView"
+                        style="@style/ValueTextTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:text="@{DetailsVM.gitHubRepoDetails.forksCount.toString()}"
+                        android:textAlignment="viewStart"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="4675 forks" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/lblOpenIssues"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:gravity="end|center_vertical"
+                        android:text="@string/label_open_issues"
+                        android:textAlignment="viewEnd"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_open_issues_48dp" />
+
+                    <TextView
+                        android:id="@+id/openIssuesView"
+                        style="@style/ValueTextTheme"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:gravity="start|center_vertical"
+                        android:text="@{DetailsVM.gitHubRepoDetails.openIssuesCount.toString()}"
+                        android:textAlignment="viewStart"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="131 open issues" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Floating action button -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/navFloatingActionButton"
+            style="@style/FloatingButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="@{DetailsVM.gitHubRepoDetails.language}"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="@string/placeholder_language" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/lblStars"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:gravity="end|center_vertical"
-                android:text="@string/label_stars"
-                android:textAlignment="viewEnd"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_stargazor_48dp" />
-
-            <TextView
-                android:id="@+id/starsView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:gravity="start|center_vertical"
-                android:text="@{DetailsVM.gitHubRepoDetails.stargazersCount.toString()}"
-                android:textAlignment="viewStart"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="38530 stars" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/lblWatchers"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:gravity="end|center_vertical"
-                android:text="@string/label_watchers"
-                android:textAlignment="viewEnd"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_watcher_48dp" />
-
-            <TextView
-                android:id="@+id/watchersView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:gravity="start|center_vertical"
-                android:text="@{DetailsVM.gitHubRepoDetails.watchersCount.toString()}"
-                android:textAlignment="viewStart"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="38530 watchers" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/lblForks"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:gravity="end|center_vertical"
-                android:text="@string/label_forks"
-                android:textAlignment="viewEnd"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_fork_right_48dp" />
-
-            <TextView
-                android:id="@+id/forksView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:gravity="start|center_vertical"
-                android:text="@{DetailsVM.gitHubRepoDetails.forksCount.toString()}"
-                android:textAlignment="viewStart"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="4675 forks" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/lblOpenIssues"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:gravity="end|center_vertical"
-                android:text="@string/label_open_issues"
-                android:textAlignment="viewEnd"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_open_issues_48dp" />
-
-            <TextView
-                android:id="@+id/openIssuesView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:gravity="start|center_vertical"
-                android:text="@{DetailsVM.gitHubRepoDetails.openIssuesCount.toString()}"
-                android:textAlignment="viewStart"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="131 open issues" />
-
-        </LinearLayout>
-    </LinearLayout>
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/placeholder_repository_name"
+            android:src="@drawable/ic_navigation_48dp" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
