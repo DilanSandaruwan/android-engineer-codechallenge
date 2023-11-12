@@ -16,6 +16,7 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import dagger.hilt.android.AndroidEntryPoint
 import jp.co.yumemi.android.code_check.R
+import jp.co.yumemi.android.code_check.constants.TagConstant
 import jp.co.yumemi.android.code_check.databinding.FragmentRepoDetailsBinding
 import jp.co.yumemi.android.code_check.util.components.CustomDialogFragment
 import jp.co.yumemi.android.code_check.viewmodels.RepoDetailsViewModel
@@ -58,27 +59,30 @@ class RepoDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Set the repository details in the ViewModel based on arguments passed to the fragment
-        viewModel.setRepoDetails(args.repository)
-
         // Observe changes in the repository details and update the UI
         viewModel.gitHubRepoDetails.observe(viewLifecycleOwner) { gitHubAccount ->
             binding.ownerIconView.load(gitHubAccount.owner?.avatarUrl) {
                 crossfade(true)
                 placeholder(R.drawable.placeholder_repository)
                 transformations(CircleCropTransformation())
+                listener(onError = { _, _ ->
+                    placeholder(R.drawable.placeholder_repository)
+                })
             }
 
             // Add an OnClickListener to the floating action button
             binding.navFloatingActionButton.setOnClickListener {
                 val url = gitHubAccount.htmlUrl
                 if (gitHubAccount.htmlUrl.isNullOrBlank()) {
-                    showErrorDialog(getString(R.string.url_not_found, requireContext()))
+                    showErrorDialog(getString(R.string.url_not_found))
                 } else {
                     openUrlInBrowser(url!!)
                 }
             }
         }
+
+        // Set the repository details in the ViewModel based on arguments passed to the fragment
+        viewModel.setRepoDetails(args.repository)
     }
 
     /**
@@ -92,7 +96,13 @@ class RepoDetailsFragment : Fragment() {
         startActivity(chooser)
     }
 
+    /**
+     * Displays an error dialog with a given error message.
+     *
+     * @param errMsg The error message to be displayed in the dialog.
+     */
     private fun showErrorDialog(errMsg: String) {
+        // Create a custom dialog fragment with the provided error details.
         val dialog = CustomDialogFragment.newInstance(
             title = getString(R.string.error_title),
             message = errMsg,
@@ -102,7 +112,19 @@ class RepoDetailsFragment : Fragment() {
             negativeClickListener = { },
             iconResId = R.drawable.ic_dialog_error
         )
-        dialog.show(childFragmentManager, "custom_dialog_error_details")
+        // Show the error dialog using the child fragment manager and a defined tag.
+        dialog.show(childFragmentManager, TagConstant.ERROR_DIALOG_DETAILS_TAG)
 
+    }
+
+    /**
+     * Called when the view is about to be destroyed.
+     * Removes observers to prevent potential memory leaks.
+     */
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        // Remove observers for GitHub repository details to avoid potential memory leaks.
+        viewModel.gitHubRepoDetails.removeObservers(viewLifecycleOwner)
     }
 }
