@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import jp.co.yumemi.android.code_check.R
+import jp.co.yumemi.android.code_check.constants.TagConstant
 import jp.co.yumemi.android.code_check.models.GitHubAccount
 
 /**
@@ -67,7 +68,7 @@ class GitHubRepoRecyclerViewAdapter(
         (holder.itemView.findViewById<View>(R.id.repositoryDescriptionTextView) as TextView).text =
             holderItem.description
         (holder.itemView.findViewById<View>(R.id.repositoryLanguageTextView) as TextView).text =
-            holderItem.language?:"N/A"
+            holderItem.language?:TagConstant.NO_LANGUAGE_FOUND
         (holder.itemView.findViewById<View>(R.id.repositoryStargazersTextView) as TextView).text =
             holderItem.stargazersCount.toString()
 

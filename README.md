@@ -16,8 +16,8 @@
 - Kotlin：1.6.21
 - Java：17
 - Gradle：8.0
-- minSdk：23
-- targetSdk：31
+- minSdk：24
+- targetSdk：33
 
 ※ ライブラリの利用はオープンソースのものに限ります。
 ※ 環境は適宜更新してください。
