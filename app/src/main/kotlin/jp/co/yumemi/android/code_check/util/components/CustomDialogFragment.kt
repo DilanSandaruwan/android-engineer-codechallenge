@@ -4,15 +4,16 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import jp.co.yumemi.android.code_check.constants.TagConstant
 
 /**
  * A custom dialog fragment for displaying a simple dialog with customizable content and actions.
  */
 class CustomDialogFragment : DialogFragment() {
-    private var title: String = "Dialog Title"
-    private var message: String = "Dialog Message"
-    private var positiveText: String = "OK"
-    private var negativeText: String = "Cancel"
+    private var title: String = TagConstant.DIALOG_FRAGMENT_TITLE
+    private var message: String = TagConstant.DIALOG_FRAGMENT_MESSAGE
+    private var positiveText: String = TagConstant.DIALOG_FRAGMENT_OK
+    private var negativeText: String = TagConstant.DIALOG_FRAGMENT_CANCEL
     private var positiveClickListener: (() -> Unit)? = null
     private var negativeClickListener: (() -> Unit)? = null
     private var iconResId: Int? = null
@@ -36,8 +37,8 @@ class CustomDialogFragment : DialogFragment() {
         fun newInstance(
             title: String,
             message: String,
-            positiveText: String = "OK",
-            negativeText: String = "Cancel",
+            positiveText: String = TagConstant.DIALOG_FRAGMENT_OK,
+            negativeText: String = TagConstant.DIALOG_FRAGMENT_CANCEL,
             positiveClickListener: (() -> Unit)? = null,
             negativeClickListener: (() -> Unit)? = null,
             iconResId: Int? = null

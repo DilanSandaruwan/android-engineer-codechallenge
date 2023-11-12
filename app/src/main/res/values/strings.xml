@@ -14,6 +14,8 @@
     <string name="msg_no_term_search">Please enter something to search.</string>
     <string name="error_title">Error</string>
     <string name="response_ok" translatable="false">OK</string>
+    <string name="select_a_browser">Select a browser</string>
+    <string name="url_not_found">URL not found.</string>
 
     <!--  errors and exceptions  -->
     <string name="network_error">Network error: </string>
@@ -30,7 +32,5 @@
     <string name="placeholder_language" translatable="false">Java</string>
     <string name="placeholder_stargazors" translatable="false">10K</string>
     <string name="placeholder_repository_owner" translatable="false">Image of the profile owner</string>
-    <string name="select_a_browser">Select a browser</string>
-    <string name="url_not_found">URL is not found!</string>
 
 </resources>

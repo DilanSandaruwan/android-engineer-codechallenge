@@ -10,6 +10,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import jp.co.yumemi.android.code_check.R
+import jp.co.yumemi.android.code_check.constants.TagConstant
 import jp.co.yumemi.android.code_check.databinding.FragmentRepoSearchBinding
 import jp.co.yumemi.android.code_check.models.GitHubAccount
 import jp.co.yumemi.android.code_check.util.components.CustomDialogFragment
@@ -57,17 +59,67 @@ class RepoSearchFragment : Fragment() {
     }
 
     /**
-     * Sets up the UI components and observes the changes in the GitHub repository list.
+     * Sets up the UI components and observes changes in the GitHub repository list.
+     * Initializes the RecyclerView, sets up the search input action listener,
+     * and observes changes in the ViewModel to update the UI accordingly.
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val repoSearchLayoutManager = LinearLayoutManager(requireContext())
-        val repoSearchDividerItemDecoration =
-            DividerItemDecoration(requireContext(), repoSearchLayoutManager.orientation)
-        adapter = GitHubRepoRecyclerViewAdapter(object :
-            GitHubRepoRecyclerViewAdapter.OnItemClickListener {
+        // Initialize and configure the RecyclerView for displaying GitHub repositories.
+        setupRecyclerView()
 
+        // Set up an action listener for the search input to trigger a search when the "Search" action is performed.
+        binding.searchInputText
+            .setOnEditorActionListener { editText, action, _ ->
+                if (action == EditorInfo.IME_ACTION_SEARCH) {
+                    handleSearchAction(editText as EditText)
+                    return@setOnEditorActionListener true
+                }
+                return@setOnEditorActionListener false
+            }
+
+        // Observe changes in the ViewModel to update the UI based on LiveData events.
+        observeViewModel()
+    }
+
+    /**
+     * Observes changes in the ViewModel's LiveData and updates the UI accordingly.
+     * Observes the GitHub repository list, loading indicator visibility, and error events.
+     */
+    private fun observeViewModel() {
+        // Observe changes in the GitHub repository list and update the RecyclerView adapter.
+        viewModel.gitHubRepoList.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
+
+        // Observe changes in the loading indicator visibility and update the UI accordingly.
+        viewModel.showLoader.observe(viewLifecycleOwner) {
+            binding.lytLoading.bubbleHolder.visibility = if (it) VISIBLE else GONE
+        }
+
+        // Observe errors and display an error dialog if an error is present.
+        viewModel.showError.observe(viewLifecycleOwner) {
+            it?.let {
+                showErrorDialog(CustomErrorMessage.createMessage(it, requireContext()))
+            }
+        }
+    }
+
+    /**
+     * Sets up the RecyclerView for displaying GitHub repositories.
+     * Configures the layout manager, item decoration, and assigns an adapter
+     * with a callback for handling item clicks.
+     */
+    private fun setupRecyclerView() {
+        // Create a LinearLayoutManager to manage the layout of items in the RecyclerView.
+        val repoSearchLayoutManager = LinearLayoutManager(requireContext())
+
+        // Add a divider between RecyclerView items for improved visual separation.
+        val repoSearchDividerItemDecoration = DividerItemDecoration(requireContext(), repoSearchLayoutManager.orientation)
+
+        // Initialize the RecyclerView adapter with an item click callback.
+        adapter = GitHubRepoRecyclerViewAdapter(object : GitHubRepoRecyclerViewAdapter.OnItemClickListener {
             /**
              * Handles item click events.
              *
@@ -78,44 +130,10 @@ class RepoSearchFragment : Fragment() {
             }
         })
 
-        binding.searchInputText
-            .setOnEditorActionListener { editText, action, _ ->
-                if (action == EditorInfo.IME_ACTION_SEARCH) {
-                    KeyBoardUtil.hideKeyboard(requireContext(), editText)
-                    editText.text.toString().let {
-                        if (it.isBlank()) {
-                            showNoTermSearchDialog()
-                        } else {
-                            viewModel.searchRepositories(it)
-                        }
-                    }
-                    return@setOnEditorActionListener true
-                }
-                return@setOnEditorActionListener false
-            }
-
-        binding.recyclerView.also {
-            it.layoutManager = repoSearchLayoutManager
-            it.addItemDecoration(repoSearchDividerItemDecoration)
-            it.adapter = adapter
-        }
-
-        viewModel.gitHubRepoList.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-        }
-
-        viewModel.showLoader.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.lytLoading.bubbleHolder.visibility = VISIBLE
-            } else {
-                binding.lytLoading.bubbleHolder.visibility = GONE
-            }
-        }
-
-        viewModel.showError.observe(viewLifecycleOwner) {
-            it?.let {
-                showErrorDialog(CustomErrorMessage.createMessage(it, requireContext()))
-            }
+        with(binding.recyclerView) {
+            this.layoutManager = repoSearchLayoutManager
+            addItemDecoration(repoSearchDividerItemDecoration)
+            adapter = this@RepoSearchFragment.adapter
         }
     }
 
@@ -128,6 +146,32 @@ class RepoSearchFragment : Fragment() {
         val repoSearchNavDirections =
             RepoSearchFragmentDirections.actionRepoSearchFragmentToRepoDetailsFragment(repository = item)
         findNavController().navigate(repoSearchNavDirections)
+    }
+
+    /**
+     * Handles the search action triggered by the user.
+     *
+     * This function hides the keyboard, retrieves the text from the provided EditText,
+     * and then decides whether to show a dialog for an empty search term or to
+     * initiate a repository search using the ViewModel.
+     *
+     * @param editText The EditText widget containing the search term.
+     */
+    private fun handleSearchAction(editText: EditText) {
+        // Hide the keyboard to provide a smoother user experience.
+        KeyBoardUtil.hideKeyboard(requireContext(), editText)
+
+        // Extract the search term from the EditText.
+        editText.text.toString().let {
+            // Check if the search term is blank.
+            if (it.isBlank()) {
+                // Display a dialog to inform the user that the search term is empty.
+                showNoTermSearchDialog()
+            } else {
+                // Initiate a search for repositories using the ViewModel.
+                viewModel.searchRepositories(it)
+            }
+        }
     }
 
     /**
@@ -147,7 +191,7 @@ class RepoSearchFragment : Fragment() {
             negativeClickListener = { },
             iconResId = R.drawable.ic_dialog_info
         )
-        dialog.show(childFragmentManager, "custom_dialog_no_term_search")
+        dialog.show(childFragmentManager, TagConstant.NO_TERM_SEARCH_DIALOG_TAG)
 
     }
 
@@ -168,7 +212,7 @@ class RepoSearchFragment : Fragment() {
             negativeClickListener = { },
             iconResId = R.drawable.ic_dialog_error
         )
-        dialog.show(childFragmentManager, "custom_dialog_error")
+        dialog.show(childFragmentManager, TagConstant.ERROR_DIALOG_TAG)
 
     }
 }
